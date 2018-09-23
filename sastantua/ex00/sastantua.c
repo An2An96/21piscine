@@ -5,113 +5,110 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: rschuppe <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/09/22 12:23:01 by rschuppe          #+#    #+#             */
-/*   Updated: 2018/09/22 17:36:45 by rschuppe         ###   ########.fr       */
+/*   Created: 2018/09/23 21:25:38 by rschuppe          #+#    #+#             */
+/*   Updated: 2018/09/23 21:36:55 by rschuppe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdio.h>
+void	ft_putchar(char c);
 
-void	display_block(int block_num, int block_counts);
-
-void	sastantua(int size)
+void	print_line(int l, int ilb, int *s, int d)
 {
-	if (size <= 0)
-	{
-		return;
-	}
+	int j;
 
-	int cur_block;
-	
-	int line_count;
-	int cur_line;
-
-	line_count = 0;
-    cur_block = 0;
-	while (cur_block < size)
+	j = -1;
+	while (++j < s[0] + s[1])
 	{
-		display_block(cur_block, size);
-		cur_block++;
+		if (j < s[0])
+			ft_putchar(' ');
+		else if (j == s[0])
+			ft_putchar('/');
+		else if (j == s[0] + s[1] - 1)
+			ft_putchar('\\');
+		else if (ilb && (l <= d) && ((j - s[0]) >= (s[1] / 2 - d / 2))
+			&& ((j - s[0]) <= (s[1] / 2 + d / 2)))
+		{
+			if (d > 3 && (l == d / 2 + 1)
+				&& (j - s[0]) == (s[1] / 2 + d / 2) - 1)
+				ft_putchar('$');
+			else
+				ft_putchar('|');
+		}
+		else
+			ft_putchar('*');
 	}
 }
 
-void	display_block(int block_num, int block_counts)
+int	get_pos_start_draft(int block_num, int block_counts)
 {
-    int i = 0;
-    int j = 0;
-    int width;
-	int start_pos = 0;
-	int str_length = 0;
+	int i;
+	int pos;
+	int offset;
 
-	//	определяем позицию начала "рисования" первой строки блока   OK
-    i = block_counts - 1;
-    while (i >= block_num)
-    {
-        start_pos += 3 + i + 2;
-        i--;
-    }
+	i = block_counts - 1;
+	pos = 3 + i;
+	offset = block_counts / 2;
+	while (i > block_num)
+	{
+		pos += 3 + i + offset;
+		if (i % 2)
+		{
+			offset--;
+		}
+		i--;
+	}
+	return (pos);
+}
 
-	//	определяем длинну строки    OK
+int	get_length_first_line(int block_num)
+{
+	int i;
+	int j;
+	int length;
+	int offset;
+
 	i = 0;
-	str_length = 3;
+	length = 3;
+	offset = 0;
 	while (i < block_num)
 	{
-        j = 0;
+		j = 0;
 		while (j < (3 + i - 1))
 		{
-			str_length += 1 * 2;
+			length += 1 * 2;
 			j++;
 		}
-		str_length += 3 * 2;
+		if ((i + 1) % 2)
+			offset++;
+		length += (2 + offset) * 2;
 		i++;
 	}
+	return (length);
+}
 
-    //  рисуем  OK
-	i = 3 + block_num;
-	while (i > 0)
+void	sastantua(int size)
+{
+	int	i;
+	int	cur_block;
+	int	door_size;
+	int	str_params[2];
+
+	cur_block = 0;
+	while (cur_block < size)
 	{
-        j = 0;
-		while (j < start_pos + str_length)
+		str_params[0] = get_pos_start_draft(cur_block, size);
+		str_params[1] = get_length_first_line(cur_block);
+		door_size = cur_block;
+		if ((cur_block + 1) % 2)
+			door_size++;
+		i = 3 + cur_block + 1;
+		while (--i > 0)
 		{
-            if (j < start_pos)
-            {
-                write(1, " ", 1);
-            }
-            else if (j == start_pos)
-            {
-                write(1, "/", 1);
-            }
-            else if (j == start_pos + str_length - 1)
-            {
-                write(1, "\\", 1);
-            }
-            else
-            {
-                if ((block_num + 1) % 2)
-                {
-                    width = block_num + 1;
-                }
-                else
-                {
-                    width = block_num;
-                }
-                if ((block_num == block_counts - 1) && (i <= block_num + 1) && ((j - start_pos) >= (str_length / 2 - width / 2)) && ((j - start_pos) <= (str_length / 2 + width / 2)))
-                {
-                    if ()
-                    
-                    write(1, "|", 1);
-                }
-                else
-                {
-                    write(1, "*", 1);
-                }
-            }
-			j++;
+			print_line(i, (cur_block == size - 1), str_params, door_size);
+			ft_putchar('\n');
+			str_params[1] += 2;
+			str_params[0]--;
 		}
-		write(1, "\n", 1);
-        str_length += 2;
-        start_pos--;
-		i--;
+		cur_block++;
 	}
 }
