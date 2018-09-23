@@ -6,7 +6,7 @@
 /*   By: rschuppe <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/23 21:25:38 by rschuppe          #+#    #+#             */
-/*   Updated: 2018/09/23 21:36:55 by rschuppe         ###   ########.fr       */
+/*   Updated: 2018/09/23 21:56:54 by rschuppe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,14 @@ void	print_line(int l, int ilb, int *s, int d)
 	}
 }
 
-int	get_pos_start_draft(int block_num, int block_counts)
+int		get_pos_start_draft(int block_num, int block_counts)
 {
 	int i;
 	int pos;
 	int offset;
 
 	i = block_counts - 1;
-	pos = 3 + i;
+	pos = i + 2;
 	offset = block_counts / 2;
 	while (i > block_num)
 	{
@@ -60,7 +60,7 @@ int	get_pos_start_draft(int block_num, int block_counts)
 	return (pos);
 }
 
-int	get_length_first_line(int block_num)
+int		get_length_first_line(int block_num)
 {
 	int i;
 	int j;
