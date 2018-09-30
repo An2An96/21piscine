@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-
 int rmatch(char *s1, char *s2, int pos1, int pos2)
 {
     if (s2[pos2] == '*' && s2[pos2 + 1] == '*')
@@ -30,11 +27,5 @@ int rmatch(char *s1, char *s2, int pos1, int pos2)
 
 int match(char *s1, char *s2)
 {
-    int i;
-    int j;
-    int temp_pos;
-
-    i = 0;
-    j = 0;
-    return rmatch(s1, s2, i, j);
+    return rmatch(s1, s2, 0, 0);
 }
